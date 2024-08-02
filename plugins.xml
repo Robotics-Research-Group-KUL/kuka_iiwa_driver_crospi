@@ -1,0 +1,5 @@
+<library path="kuka_iiwa_driver">
+  <class type="etasl::KukaIiwaRobotDriver" base_class_type="etasl::RobotDriver">
+    <description>This is a plugin for the kuka iiwa robot driver compatible with etasl ROS2 node.</description>
+  </class>
+</library>
