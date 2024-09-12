@@ -16,6 +16,10 @@ find_package(ament_cmake REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(etasl_ros2 REQUIRED)
 
+include_directories(
+   include
+)
+
 set(CMAKE_CXX_STANDARD 17)
 
 # include_directories(include ${LUA_INCLUDE_DIR})
@@ -25,9 +29,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(KUKA_FRI_SDK ${CMAKE_CURRENT_SOURCE_DIR}/external/kuka_fri_sdk/)
 set(FRISDK_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/external/kuka_fri_sdk/include)
 set(FRISDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/external/kuka_fri_sdk/lib)
+
+message("--------------KUKA_FRI_SDK: ${KUKA_FRI_SDK}----------------")
+
 add_custom_target(kuka_fri_sdk COMMAND make clean && make
                    WORKING_DIRECTORY ${KUKA_FRI_SDK}/build/GNUMake
 )
+
+
 include_directories(${FRISDK_INCLUDE})
 
 set(src_kuka_iiwa_driver
@@ -40,12 +49,18 @@ add_library(kuka_iiwa_driver ${src_kuka_iiwa_driver})
 
 add_dependencies(kuka_iiwa_driver kuka_fri_sdk) #Makes sure to compile first kuka_fri_sdk before the kuka_iiwa_driver
 
+message("-------------- KUKA FRI SDK compiled----------------")
+
+
 find_library(FRI_CLIENT_LIB
              NAMES libFRIClient.so
              PATHS ${FRISDK_LIB}
 )
 
-set(rosdependencies)
+set(rosdependencies
+"etasl_ros2"
+"pluginlib"
+)
 
 set(dependencies
     fmt   
@@ -55,6 +70,7 @@ set(dependencies
     etasl_task_utils
     etasl_node_utils
     etasl_interfacing_utils
+    robot_interfacing_utils
     # ${FRISDK_LIB}/libFRIClient.so
     ${FRI_CLIENT_LIB}
     )
@@ -63,11 +79,6 @@ set(dependencies
 
 message("--------------FRI_CLIENT_LIB: ${FRI_CLIENT_LIB}----------------")
 
-
-ament_target_dependencies(kuka_iiwa_driver
-  "etasl_ros2"
-  "pluginlib"
-)
 
 pluginlib_export_plugin_description_file(etasl_ros2 plugins.xml)
 
@@ -78,6 +89,9 @@ target_include_directories(kuka_iiwa_driver PUBLIC
 
 ament_target_dependencies(kuka_iiwa_driver ${rosdependencies})  
 target_link_libraries(kuka_iiwa_driver ${dependencies})
+
+install(DIRECTORY include/
+  DESTINATION include)
 
 install(TARGETS kuka_iiwa_driver
   DESTINATION lib/${PROJECT_NAME})
@@ -98,5 +112,9 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+ament_export_include_directories(
+  include
+)
 
 ament_package()

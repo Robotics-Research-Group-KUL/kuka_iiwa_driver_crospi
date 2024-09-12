@@ -1,0 +1,3 @@
+[submodule "external/kuka_fri_sdk"]
+	path = external/kuka_fri_sdk
+	url = git@gitlab.kuleuven.be:rob/rob-hardware/kuka_fri_sdk.git

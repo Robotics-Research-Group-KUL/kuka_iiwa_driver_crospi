@@ -11,30 +11,41 @@ namespace etasl {
 #define NUM_JOINTS 7
 #define MAX_RETRIES 3000
 
-KukaIiwaRobotDriver::KukaIiwaRobotDriver(
-            std::string robot_name,
-            FeedbackMsg* fb,
-            SetpointMsg* sp,
-            std::string p_ip_address,
-            unsigned int p_fri_port)
-    : periodicity(0.0),
+KukaIiwaRobotDriver::KukaIiwaRobotDriver(): periodicity(0.0),
     app(connection,client) ,
     control_mode(ControlMode::ControlMode::IDLE),
-    ip_address(p_ip_address),
-    fri_port(p_fri_port),
+    // ip_address(p_ip_address),
+    // fri_port(p_fri_port),
     iiwa_connected(false)
+
 {
+    // empty 
+}
+
+void KukaIiwaRobotDriver::construct(std::string robot_name, 
+                        FeedbackMsg* fb, 
+                        SetpointMsg* sp,
+                        const Json::Value& config)
+{
+
+    ip_address = config["ip_address"].asString();
+    
+    // get fri_port from config
+    fri_port = config["fri_port"].asUInt();
+
+    // print fri_port
+    std::cout << "------IP: " << ip_address << "  ,   fri_port: " << fri_port << " ,   type:" << config["fri_port"].isNull() << std::endl;
+
+
     feedback_ptr = fb; //defined in RobotDriver super class.
     setpoint_ptr = sp; //defined in RobotDriver super class.
     name = robot_name; //defined in RobotDriver super class.
     std::cout << "Constructed object of KukaIiwaRobotDriver class with name: " << name << std::endl;
-    std::cout << "IP: " << ip_address << "  ,   fri_port: " << p_fri_port << std::endl;
 
 }
 
 bool KukaIiwaRobotDriver::initialize()
 {
-    // joint_pos = initial_joints;
 
     iiwa_connected = app.connect(fri_port, ip_address.c_str());
     // // TODO : Raise error if iiwa connected is false

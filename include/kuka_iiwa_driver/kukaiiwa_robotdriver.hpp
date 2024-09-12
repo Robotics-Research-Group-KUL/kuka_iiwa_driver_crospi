@@ -1,13 +1,14 @@
 #pragma once
 
-#include "robot_interfacing_utils/robotdriver.hpp"
-#include "robot_interfacing_utils/controlmodes_enum.hpp"
 #include <string>
 
 // KUKA FRI SDK
 #include "kukaiiwa_client.hpp"
 #include <friUdpConnection.h>
 #include <friClientApplication.h>
+
+#include "robot_interfacing_utils/robotdriver.hpp"
+#include "robot_interfacing_utils/controlmodes_enum.hpp"
 
 
 namespace etasl {
@@ -37,12 +38,18 @@ class KukaIiwaRobotDriver : public RobotDriver {
         bool iiwa_connected;
 
     public:
-        KukaIiwaRobotDriver(
-            std::string robot_name,
-            FeedbackMsg* fb,
-            SetpointMsg* sp,
-            std::string p_ip_address,
-            unsigned int p_fri_port);
+            KukaIiwaRobotDriver();
+        // KukaIiwaRobotDriver(
+        //     std::string robot_name,
+        //     FeedbackMsg* fb,
+        //     SetpointMsg* sp,
+        //     std::string p_ip_address,
+        //     unsigned int p_fri_port);
+
+        virtual void construct(std::string robot_name, 
+                    FeedbackMsg* fb, 
+                    SetpointMsg* sp,
+                    const Json::Value& config) override;
 
         /**
          * will only return true if it has received values for all the joints named in jnames.

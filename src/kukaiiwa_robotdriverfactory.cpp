@@ -91,11 +91,11 @@ public:
 
 
 
-        std::vector<double> init_joints;
-        // init_joints.resize(parameters["initial_joints"].size(), 0.0);
-        for (auto n : parameters["initial_joints"]) {
-            init_joints.push_back(n.asDouble());
-        }
+        // std::vector<double> init_joints;
+        // // init_joints.resize(parameters["initial_joints"].size(), 0.0);
+        // for (auto n : parameters["initial_joints"]) {
+        //     init_joints.push_back(n.asDouble());
+        // }
         std::string name = getName();
 
         // for (auto n : parameters["variable-names"]) {
@@ -109,14 +109,20 @@ public:
         //     double periodicity_val,
         //     std::vector<double> init_joints)
 
+        auto shared_robot_driv =  std::make_shared<KukaIiwaRobotDriver>();
+
+        shared_robot_driv->construct(name, feedback_ptr, setpoint_ptr, parameters);
 
 
-        return std::make_shared<KukaIiwaRobotDriver>(
-        name, 
-        feedback_ptr, 
-        setpoint_ptr, 
-        p_ip_address, 
-        p_fri_port);
+
+        return shared_robot_driv;
+
+        //         return std::make_shared<KukaIiwaRobotDriver>(
+        // name, 
+        // feedback_ptr, 
+        // setpoint_ptr, 
+        // p_ip_address, 
+        // p_fri_port);
     }
 
     virtual ~KukaIiwaRobotDriverFactory() { }
