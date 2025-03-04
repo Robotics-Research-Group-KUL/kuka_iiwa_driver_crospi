@@ -25,16 +25,17 @@ KukaIiwaRobotDriver::KukaIiwaRobotDriver(): periodicity(0.0),
 void KukaIiwaRobotDriver::construct(std::string robot_name, 
                         FeedbackMsg* fb, 
                         SetpointMsg* sp,
-                        const Json::Value& config)
+                        const Json::Value& config,
+                        boost::shared_ptr<etasl::JsonChecker> jsonchecker)
 {
 
-    ip_address = config["ip_address"].asString();
+    ip_address = jsonchecker->asString(config, "ip_address");
     
     // get fri_port from config
-    fri_port = config["fri_port"].asUInt();
+    fri_port = jsonchecker->asUInt(config, "fri_port");
 
     // print fri_port
-    std::cout << "------IP: " << ip_address << "  ,   fri_port: " << fri_port << " ,   type:" << config["fri_port"].isNull() << std::endl;
+    // std::cout << "------IP: " << ip_address << "  ,   fri_port: " << fri_port << " ,   type:" << config["fri_port"].isNull() << std::endl;
 
 
     feedback_ptr = fb; //defined in RobotDriver super class.
