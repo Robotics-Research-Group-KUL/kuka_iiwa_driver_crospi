@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(kuka_iiwa_driver)
 
-message("--------------helloooo----------------")
+message("--------------kuka_iiwa_driver compiling ----------------")
 
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -32,8 +32,12 @@ set(FRISDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/external/kuka_fri_sdk/lib)
 
 message("--------------KUKA_FRI_SDK: ${KUKA_FRI_SDK}----------------")
 
-add_custom_target(kuka_fri_sdk COMMAND make clean && make
-                   WORKING_DIRECTORY ${KUKA_FRI_SDK}/build/GNUMake
+add_custom_target(
+  kuka_fri_sdk
+  ALL
+  COMMAND make clean && make
+  COMMENT "Building KUKA FRI SDK"
+  WORKING_DIRECTORY ${KUKA_FRI_SDK}/build/GNUMake
 )
 
 
