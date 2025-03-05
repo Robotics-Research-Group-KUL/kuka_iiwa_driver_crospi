@@ -49,7 +49,9 @@ set(src_kuka_iiwa_driver
     src/kukaiiwa_client.cpp
 )
 
-add_library(kuka_iiwa_driver ${src_kuka_iiwa_driver})
+add_library(kuka_iiwa_driver 
+            SHARED 
+            ${src_kuka_iiwa_driver})
 
 add_dependencies(kuka_iiwa_driver kuka_fri_sdk) #Makes sure to compile first kuka_fri_sdk before the kuka_iiwa_driver
 
@@ -70,11 +72,11 @@ set(dependencies
     fmt   
     # pugixml
     jsoncpp
-    etasl_misc_lib 
-    etasl_task_utils
-    etasl_node_utils
-    etasl_interfacing_utils
-    robot_interfacing_utils
+    # etasl_misc_lib 
+    # etasl_task_utils
+    # etasl_node_utils
+    # etasl_interfacing_utils
+    # robot_interfacing_utils
     # ${FRISDK_LIB}/libFRIClient.so
     ${FRI_CLIENT_LIB}
     )
@@ -94,11 +96,24 @@ target_include_directories(kuka_iiwa_driver PUBLIC
 ament_target_dependencies(kuka_iiwa_driver ${rosdependencies})  
 target_link_libraries(kuka_iiwa_driver ${dependencies})
 
+ament_export_dependencies(etasl_ros2)
+
+ament_export_libraries(
+  kuka_iiwa_driver
+)
+
+install(
+  TARGETS kuka_iiwa_driver
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 install(DIRECTORY include/
   DESTINATION include)
 
-install(TARGETS kuka_iiwa_driver
-  DESTINATION lib/${PROJECT_NAME})
+# install(TARGETS kuka_iiwa_driver
+#   DESTINATION lib/${PROJECT_NAME})
 
 
 # uncomment the following section in order to fill in
