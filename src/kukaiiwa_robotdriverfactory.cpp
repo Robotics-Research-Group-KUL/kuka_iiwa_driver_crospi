@@ -81,10 +81,10 @@ public:
      */
     virtual RobotDriver::SharedPtr create(const Json::Value& parameters, boost::shared_ptr<etasl::JsonChecker> jsonchecker)
     {
-        std::string p_ip_address = jsonchecker->asString(parameters, "ip_address");
+        // std::string p_ip_address = jsonchecker->asString(parameters, "ip_address");
         
-        // get fri_port from parameters
-        unsigned int p_fri_port = jsonchecker->asUInt(parameters, "fri_port");
+        // // get fri_port from parameters
+        // unsigned int p_fri_port = jsonchecker->asUInt(parameters, "fri_port");
 
         // print fri_port
         // std::cout << "------IP: " << p_ip_address << "  ,   fri_port: " << p_fri_port << " ,   type:" << parameters["fri_port"].isNull() << std::endl;

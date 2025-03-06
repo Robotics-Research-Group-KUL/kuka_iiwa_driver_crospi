@@ -4,7 +4,7 @@
   <name>kuka_iiwa_driver</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="santiago.iregui@kuleuven.be">santiregui</maintainer>
+  <maintainer email="federico.ulloarios@kuleuven.be">Federico Ulloa Rios</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
