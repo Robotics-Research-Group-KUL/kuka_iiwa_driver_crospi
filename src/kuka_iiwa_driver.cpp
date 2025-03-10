@@ -1,4 +1,4 @@
-#include "kuka_iiwa_driver/kukaiiwa_robotdriver.hpp"
+#include "kuka_iiwa_driver/kuka_iiwa_driver.hpp"
 #include <fmt/format.h>
 #include <iostream>
 
@@ -11,7 +11,7 @@ namespace etasl {
 #define NUM_JOINTS 7
 #define MAX_RETRIES 3000
 
-KukaIiwaRobotDriver::KukaIiwaRobotDriver(): periodicity(0.0),
+kuka_iiwa_driver::kuka_iiwa_driver(): 
     app(connection,client) ,
     control_mode(ControlMode::ControlMode::IDLE),
     // ip_address(p_ip_address),
@@ -22,7 +22,7 @@ KukaIiwaRobotDriver::KukaIiwaRobotDriver(): periodicity(0.0),
     // empty 
 }
 
-void KukaIiwaRobotDriver::construct(std::string robot_name, 
+void kuka_iiwa_driver::construct(std::string robot_name, 
                         FeedbackMsg* fb, 
                         SetpointMsg* sp,
                         const Json::Value& config,
@@ -41,11 +41,11 @@ void KukaIiwaRobotDriver::construct(std::string robot_name,
     feedback_ptr = fb; //defined in RobotDriver super class.
     setpoint_ptr = sp; //defined in RobotDriver super class.
     name = robot_name; //defined in RobotDriver super class.
-    std::cout << "Constructed object of KukaIiwaRobotDriver class with name: " << name << std::endl;
+    std::cout << "Constructed object of kuka_iiwa_driver class with name: " << name << std::endl;
 
 }
 
-bool KukaIiwaRobotDriver::initialize()
+bool kuka_iiwa_driver::initialize()
 {
 
     iiwa_connected = app.connect(fri_port, ip_address.c_str());
@@ -89,7 +89,7 @@ bool KukaIiwaRobotDriver::initialize()
     return true;
 }
 
-void KukaIiwaRobotDriver::update(volatile std::atomic<bool>& stopFlag)
+void kuka_iiwa_driver::update(volatile std::atomic<bool>& stopFlag)
 {
 
     client.getContinousState();
@@ -123,29 +123,29 @@ void KukaIiwaRobotDriver::update(volatile std::atomic<bool>& stopFlag)
     // print hola
 }
 
-void KukaIiwaRobotDriver::on_configure() {
+void kuka_iiwa_driver::on_configure() {
     // std::cout << "entering on configure =======================" << std::endl;
 
 }
 
-void KukaIiwaRobotDriver::on_activate() 
+void kuka_iiwa_driver::on_activate() 
 {
 
 
 }
 
-void KukaIiwaRobotDriver::on_deactivate() {
+void kuka_iiwa_driver::on_deactivate() {
     // std::cout << "entering on deactivate =======================" << std::endl;
 
 }
 
-void KukaIiwaRobotDriver::on_cleanup() {
+void kuka_iiwa_driver::on_cleanup() {
     // std::cout << "entering on cleanup =======================" << std::endl;
 
 }
 
 
-void KukaIiwaRobotDriver::finalize() {
+void kuka_iiwa_driver::finalize() {
     std::cout << "finalize() called =======================" << std::endl;
     app.disconnect();
 
@@ -153,7 +153,7 @@ void KukaIiwaRobotDriver::finalize() {
 
 
 
-KukaIiwaRobotDriver::~KukaIiwaRobotDriver() {
+kuka_iiwa_driver::~kuka_iiwa_driver() {
 
 };
 
@@ -163,4 +163,4 @@ KukaIiwaRobotDriver::~KukaIiwaRobotDriver() {
 
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(etasl::KukaIiwaRobotDriver, etasl::RobotDriver)
+PLUGINLIB_EXPORT_CLASS(etasl::kuka_iiwa_driver, etasl::RobotDriver)

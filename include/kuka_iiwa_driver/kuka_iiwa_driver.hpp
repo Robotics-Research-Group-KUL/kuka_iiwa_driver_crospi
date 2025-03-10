@@ -13,9 +13,9 @@
 
 namespace etasl {
 
-class KukaIiwaRobotDriver : public RobotDriver {
+class kuka_iiwa_driver : public RobotDriver {
     public:
-        typedef std::shared_ptr<KukaIiwaRobotDriver> SharedPtr;
+        typedef std::shared_ptr<kuka_iiwa_driver> SharedPtr;
 
 
     private:
@@ -24,7 +24,6 @@ class KukaIiwaRobotDriver : public RobotDriver {
         // SetpointMsg* setpoint_ptr; Defined in super class RobotDriver at header file robotdriver.hpp
         // std::string name;; Defined in super class RobotDriver at header file robotdriver.hpp
 
-        double periodicity;
         ControlMode::ControlMode control_mode;
 
         std::vector<double> joint_pos;
@@ -38,8 +37,8 @@ class KukaIiwaRobotDriver : public RobotDriver {
         bool iiwa_connected;
 
     public:
-            KukaIiwaRobotDriver();
-        // KukaIiwaRobotDriver(
+            kuka_iiwa_driver();
+        // kuka_iiwa_driver(
         //     std::string robot_name,
         //     FeedbackMsg* fb,
         //     SetpointMsg* sp,
@@ -71,7 +70,7 @@ class KukaIiwaRobotDriver : public RobotDriver {
 
         // virtual const std::string& getName() const override;
 
-        virtual ~KukaIiwaRobotDriver();
+        virtual ~kuka_iiwa_driver();
 };
 
 } // namespace etasl

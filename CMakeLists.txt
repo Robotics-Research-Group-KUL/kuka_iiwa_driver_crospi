@@ -44,8 +44,8 @@ add_custom_target(
 include_directories(${FRISDK_INCLUDE})
 
 set(src_kuka_iiwa_driver
-    src/kukaiiwa_robotdriver.cpp
-    src/kukaiiwa_robotdriverfactory.cpp
+    src/kuka_iiwa_driver.cpp
+    # src/kukaiiwa_robotdriverfactory.cpp
     src/kukaiiwa_client.cpp
 )
 

@@ -12,11 +12,11 @@
 namespace etasl {
 
 /**
- * This is a factory that can create a KukaIiwaRobotDriver
+ * This is a factory that can create a kuka_iiwa_driver
  * The platform specific part is given with the constructor of this factory
  * Afterwards, everything is generic and independent of the platform
  */
-class KukaIiwaRobotDriverFactory : public RobotDriverFactory {
+class kuka_iiwa_driver_factory : public RobotDriverFactory {
 
     FeedbackMsg* feedback_ptr;
     SetpointMsg* setpoint_ptr; 
@@ -24,7 +24,7 @@ class KukaIiwaRobotDriverFactory : public RobotDriverFactory {
 public:
     typedef std::shared_ptr<RobotDriverFactory> SharedPtr;
 
-    KukaIiwaRobotDriverFactory(FeedbackMsg* _feedback_ptr, SetpointMsg* _setpoint_ptr)
+    kuka_iiwa_driver_factory(FeedbackMsg* _feedback_ptr, SetpointMsg* _setpoint_ptr)
     :feedback_ptr(_feedback_ptr)
     ,setpoint_ptr(_setpoint_ptr)
     {
@@ -39,10 +39,10 @@ public:
         std::string schema_src = R"(
                     {
                         "$schema": "http://json-schema.org/draft-06/schema",
-                        "$id":"kukaiiwarobotdriver.json",
+                        "$id":"kuka_iiwa_driver.json",
                         "type":"object",
                         "properties":{
-                            "is-kukaiiwarobotdriver" : {
+                            "is-kuka_iiwa_driver" : {
                                 "description":"To indicate that the task will be executed using a kuka iiwa robot.",
                                 "type":"boolean",
                                 "default":true
@@ -58,7 +58,7 @@ public:
                                 "default": 30200
                             }
                         },
-                        "required":["is-kukaiiwarobotdriver","ip_address", "fri_port"],
+                        "required":["is-kuka_iiwa_driver","ip_address", "fri_port"],
                         "additionalProperties": false
                 )";
         Json::Value schema;
@@ -72,7 +72,7 @@ public:
      */
     virtual const char* getName()
     {
-        return "kukaiiwarobotdriver";
+        return "kuka_iiwa_driver";
     }
 
     /**
@@ -102,14 +102,14 @@ public:
         //     varnames.push_back(n.asString());
         // }
 
-        // KukaIiwaRobotDriver::KukaIiwaRobotDriver(
+        // kuka_iiwa_driver::kuka_iiwa_driver(
         //     std::string robot_name,
         //     FeedbackMsg* fb,
         //     SetpointMsg* sp,
         //     double periodicity_val,
         //     std::vector<double> init_joints)
 
-        auto shared_robot_driv =  std::make_shared<KukaIiwaRobotDriver>();
+        auto shared_robot_driv =  std::make_shared<kuka_iiwa_driver>();
 
         shared_robot_driv->construct(name, feedback_ptr, setpoint_ptr, parameters, jsonchecker);
 
@@ -117,7 +117,7 @@ public:
 
         return shared_robot_driv;
 
-        //         return std::make_shared<KukaIiwaRobotDriver>(
+        //         return std::make_shared<kuka_iiwa_driver>(
         // name, 
         // feedback_ptr, 
         // setpoint_ptr, 
@@ -125,13 +125,13 @@ public:
         // p_fri_port);
     }
 
-    virtual ~KukaIiwaRobotDriverFactory() { }
+    virtual ~kuka_iiwa_driver_factory() { }
 };
 
 void registerKukaIiwaRobotDriverFactory(FeedbackMsg* _feedback_ptr, SetpointMsg* _setpoint_ptr)
 {
     // be sure to use the BASE CLASS as template parameter for the Registry!
-    Registry<RobotDriverFactory>::registerFactory(std::make_shared<KukaIiwaRobotDriverFactory>(_feedback_ptr, _setpoint_ptr));
+    Registry<RobotDriverFactory>::registerFactory(std::make_shared<kuka_iiwa_driver_factory>(_feedback_ptr, _setpoint_ptr));
 }
 
 } // namespace
