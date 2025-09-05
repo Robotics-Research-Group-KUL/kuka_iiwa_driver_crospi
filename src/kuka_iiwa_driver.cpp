@@ -12,21 +12,18 @@ namespace etasl {
 #define MAX_RETRIES 3000
 
 kuka_iiwa_driver::kuka_iiwa_driver(): 
-    app(connection,client) ,
     control_mode(ControlMode::ControlMode::IDLE),
-    // ip_address(p_ip_address),
-    // fri_port(p_fri_port),
+    app(connection,client) ,
     iiwa_connected(false)
 
 {
-    // empty 
 }
 
 void kuka_iiwa_driver::construct(std::string robot_name, 
-                        FeedbackMsg* fb, 
-                        SetpointMsg* sp,
+                        robotdrivers::FeedbackMsg* fb, 
+                        robotdrivers::SetpointMsg* sp,
                         const Json::Value& config,
-                        boost::shared_ptr<etasl::JsonChecker> jsonchecker)
+                        std::shared_ptr<etasl::JsonChecker> jsonchecker)
 {
 
     ip_address = jsonchecker->asString(config, "ip_address");
@@ -34,12 +31,11 @@ void kuka_iiwa_driver::construct(std::string robot_name,
     // get fri_port from config
     fri_port = jsonchecker->asUInt(config, "fri_port");
 
-    // print fri_port
-    // std::cout << "------IP: " << ip_address << "  ,   fri_port: " << fri_port << " ,   type:" << config["fri_port"].isNull() << std::endl;
+    AvailableFeedback available_fb{};
+    available_fb.joint_pos = true;
 
+    constructPorts(NUM_JOINTS, available_fb); //Constructs all shared pointers and initialize data structures. Call after assigning available_feedback booleans.
 
-    feedback_ptr = fb; //defined in RobotDriver super class.
-    setpoint_ptr = sp; //defined in RobotDriver super class.
     name = robot_name; //defined in RobotDriver super class.
     std::cout << "Constructed object of kuka_iiwa_driver class with name: " << name << std::endl;
 
@@ -71,20 +67,13 @@ bool kuka_iiwa_driver::initialize()
         num_retries++;
     }
 
-    feedback_ptr->mtx.lock();
-    setpoint_ptr->mtx.lock();
-
-    assert(feedback_ptr->joint.pos.data.size() == static_cast<int>(LBRState::NUMBER_OF_JOINTS));
+    assert(joint_pos_struct.data.size() == static_cast<int>(LBRState::NUMBER_OF_JOINTS));
 
     for (unsigned int i=0; i<LBRState::NUMBER_OF_JOINTS;i++) {
-        feedback_ptr->joint.pos.data[i] = client.meas_jnt_pos[i];
-        // std::cout << "hello" << i << std::endl;
+        joint_pos_struct.data[i] = client.meas_jnt_pos[i];
     }
-    feedback_ptr->joint.pos.is_available = true;
-    // Stablish communication with the robot
-
-    setpoint_ptr->mtx.unlock();
-    feedback_ptr->mtx.unlock();
+    
+    writeFeedbackJointPosition(joint_pos_struct);
 
     return true;
 }
@@ -95,32 +84,22 @@ void kuka_iiwa_driver::update(volatile std::atomic<bool>& stopFlag)
     client.getContinousState();
 	client.getDiscreteState();
 
-    feedback_ptr->mtx.lock();
-    setpoint_ptr->mtx.lock();
-
-    assert(feedback_ptr->joint.pos.data.size() == setpoint_ptr->velocity.data.size());
+    readSetpointJointVelocity(setpoint_joint_vel_struct);
+    assert(setpoint_joint_vel_struct.data.size() == static_cast<int>(LBRState::NUMBER_OF_JOINTS));
 
     if (client.current_session_state == COMMANDING_ACTIVE)
     {
         for (unsigned int i=0; i<LBRState::NUMBER_OF_JOINTS;i++) {
-            client.cmd_jnt_pos[i] += setpoint_ptr->velocity.data[i]*client.robotState().getSampleTime();
+            client.cmd_jnt_pos[i] += setpoint_joint_vel_struct.data[i]*client.robotState().getSampleTime();
         }
     }
 
     for (unsigned int i=0; i<LBRState::NUMBER_OF_JOINTS;i++) {
-        feedback_ptr->joint.pos.data[i] = client.meas_jnt_pos[i];
+        joint_pos_struct.data[i] = client.meas_jnt_pos[i];
     }
-    // std::cout << "-----" << std::endl;
-    // std::cout << client.cmd_jnt_pos[0] << " , " << client.cmd_jnt_pos[1] << " , "<< client.cmd_jnt_pos[2] << " , "<< std::endl;
-    // std::cout << setpoint_ptr->velocity.data[0] << " , " << setpoint_ptr->velocity.data[1] << " , "<< setpoint_ptr->velocity.data[2] << " , "<< std::endl;
-    setpoint_ptr->velocity.fs = etasl::OldData;
-
-    setpoint_ptr->mtx.unlock();
-    feedback_ptr->mtx.unlock();
+    writeFeedbackJointPosition(joint_pos_struct);
 
     app.step();
-    
-    // print hola
 }
 
 void kuka_iiwa_driver::on_configure() {

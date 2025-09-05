@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(kuka_iiwa_driver)
 
 message("--------------kuka_iiwa_driver compiling ----------------")
@@ -16,11 +16,23 @@ find_package(ament_cmake REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(etasl_ros2 REQUIRED)
 
+
+# -- start --Stuff for triple buffer implementation of boost 1.89
+set(BOOST_ROOT "/opt/boost/1.89.0")
+set(CMAKE_PREFIX_PATH "/opt/boost/1.89.0" ${CMAKE_PREFIX_PATH})
+find_package(Boost 1.89 REQUIRED)
+message(STATUS "Using Boost version ${Boost_VERSION}")
+message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
+
+
+
 include_directories(
    include
 )
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 # include_directories(include ${LUA_INCLUDE_DIR})
 
@@ -45,7 +57,6 @@ include_directories(${FRISDK_INCLUDE})
 
 set(src_kuka_iiwa_driver
     src/kuka_iiwa_driver.cpp
-    # src/kukaiiwa_robotdriverfactory.cpp
     src/kukaiiwa_client.cpp
 )
 
@@ -91,7 +102,9 @@ pluginlib_export_plugin_description_file(etasl_ros2 plugins.xml)
 
 target_include_directories(kuka_iiwa_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${Boost_INCLUDE_DIRS}
+)
 
 ament_target_dependencies(kuka_iiwa_driver ${rosdependencies})  
 target_link_libraries(kuka_iiwa_driver ${dependencies})
@@ -112,8 +125,8 @@ install(
 install(DIRECTORY include/
   DESTINATION include)
 
-# install(TARGETS kuka_iiwa_driver
-#   DESTINATION lib/${PROJECT_NAME})
+install(DIRECTORY json_schemas
+  DESTINATION share/${PROJECT_NAME})
 
 
 # uncomment the following section in order to fill in
@@ -132,8 +145,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories(
-  include
-)
+# ament_export_include_directories(
+#   include
+# )
 
 ament_package()

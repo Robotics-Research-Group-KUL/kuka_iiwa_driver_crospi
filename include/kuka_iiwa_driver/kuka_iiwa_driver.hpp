@@ -36,20 +36,18 @@ class kuka_iiwa_driver : public RobotDriver {
         ClientApplication app;
         bool iiwa_connected;
 
+        // Fields for storing the data to be sent/received to/from the robot
+        robotdrivers::DynamicJointDataField setpoint_joint_vel_struct;
+        robotdrivers::DynamicJointDataField joint_pos_struct;
+
     public:
-            kuka_iiwa_driver();
-        // kuka_iiwa_driver(
-        //     std::string robot_name,
-        //     FeedbackMsg* fb,
-        //     SetpointMsg* sp,
-        //     std::string p_ip_address,
-        //     unsigned int p_fri_port);
+        kuka_iiwa_driver();
 
         virtual void construct(std::string robot_name, 
-                    FeedbackMsg* fb, 
-                    SetpointMsg* sp,
+                    robotdrivers::FeedbackMsg* fb, 
+                    robotdrivers::SetpointMsg* sp,
                     const Json::Value& config,
-                    boost::shared_ptr<etasl::JsonChecker> jsonchecker) override;
+                    std::shared_ptr<etasl::JsonChecker> jsonchecker) override;
 
         /**
          * will only return true if it has received values for all the joints named in jnames.
