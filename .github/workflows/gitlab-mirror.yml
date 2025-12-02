@@ -25,6 +25,6 @@ jobs:
         run: |
           git config --global user.email "ci@example.com"
           git config --global user.name "GitHub CI Mirror"
-          git remote add gitlab git@gitlab.kuleuven.be:rob-expressiongraphs/ros2/crospi_github_mirror/<repo>.git
+          git remote add gitlab git@gitlab.kuleuven.be:rob-expressiongraphs/ros2/crospi_github_mirror/kuka_iiwa_driver_crospi.git
           git push --all gitlab
           git push --tags gitlab
