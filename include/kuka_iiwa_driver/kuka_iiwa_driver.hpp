@@ -35,6 +35,7 @@ class kuka_iiwa_driver : public RobotDriver {
         UdpConnection     connection;
         ClientApplication app;
         bool iiwa_connected;
+        bool first_commanding_active;
 
         // Fields for storing the data to be sent/received to/from the robot
         robotdrivers::DynamicJointDataField setpoint_joint_vel_struct;
@@ -43,9 +44,7 @@ class kuka_iiwa_driver : public RobotDriver {
     public:
         kuka_iiwa_driver();
 
-        virtual void construct(std::string robot_name, 
-                    robotdrivers::FeedbackMsg* fb, 
-                    robotdrivers::SetpointMsg* sp,
+        virtual void construct(std::string robot_name,
                     const Json::Value& config,
                     std::shared_ptr<etasl::JsonChecker> jsonchecker) override;
 

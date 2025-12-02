@@ -19,9 +19,7 @@ kuka_iiwa_driver::kuka_iiwa_driver():
 {
 }
 
-void kuka_iiwa_driver::construct(std::string robot_name, 
-                        robotdrivers::FeedbackMsg* fb, 
-                        robotdrivers::SetpointMsg* sp,
+void kuka_iiwa_driver::construct(std::string robot_name,
                         const Json::Value& config,
                         std::shared_ptr<etasl::JsonChecker> jsonchecker)
 {
@@ -35,9 +33,14 @@ void kuka_iiwa_driver::construct(std::string robot_name,
     available_fb.joint_pos = true;
 
     constructPorts(NUM_JOINTS, available_fb); //Constructs all shared pointers and initialize data structures. Call after assigning available_feedback booleans.
+    
+    setpoint_joint_vel_struct.data.resize(static_cast<int>(LBRState::NUMBER_OF_JOINTS), 0.0); //resize and initialize setpoint joint velocities to zero
+    joint_pos_struct.data.resize(static_cast<int>(LBRState::NUMBER_OF_JOINTS), 0.0);
 
     name = robot_name; //defined in RobotDriver super class.
     std::cout << "Constructed object of kuka_iiwa_driver class with name: " << name << std::endl;
+
+    first_commanding_active = false;
 
 }
 
@@ -92,6 +95,12 @@ void kuka_iiwa_driver::update(volatile std::atomic<bool>& stopFlag)
         for (unsigned int i=0; i<LBRState::NUMBER_OF_JOINTS;i++) {
             client.cmd_jnt_pos[i] += setpoint_joint_vel_struct.data[i]*client.robotState().getSampleTime();
         }
+        first_commanding_active = true;
+    }
+    else if (first_commanding_active)
+    {
+        std::cout << "WARNING: Robot not in COMMANDING_ACTIVE state, stopping the robot." << std::endl;
+        stopFlag.store(true);
     }
 
     for (unsigned int i=0; i<LBRState::NUMBER_OF_JOINTS;i++) {
