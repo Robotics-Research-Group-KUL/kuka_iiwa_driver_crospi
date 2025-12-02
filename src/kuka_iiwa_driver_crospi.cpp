@@ -1,4 +1,4 @@
-#include "kuka_iiwa_driver/kuka_iiwa_driver.hpp"
+#include "kuka_iiwa_driver_crospi/kuka_iiwa_driver_crospi.hpp"
 #include <fmt/format.h>
 #include <iostream>
 
@@ -11,7 +11,7 @@ namespace etasl {
 #define NUM_JOINTS 7
 #define MAX_RETRIES 3000
 
-kuka_iiwa_driver::kuka_iiwa_driver(): 
+kuka_iiwa_driver_crospi::kuka_iiwa_driver_crospi(): 
     control_mode(ControlMode::ControlMode::IDLE),
     app(connection,client) ,
     iiwa_connected(false)
@@ -19,7 +19,7 @@ kuka_iiwa_driver::kuka_iiwa_driver():
 {
 }
 
-void kuka_iiwa_driver::construct(std::string robot_name,
+void kuka_iiwa_driver_crospi::construct(std::string robot_name,
                         const Json::Value& config,
                         std::shared_ptr<etasl::JsonChecker> jsonchecker)
 {
@@ -38,13 +38,13 @@ void kuka_iiwa_driver::construct(std::string robot_name,
     joint_pos_struct.data.resize(static_cast<int>(LBRState::NUMBER_OF_JOINTS), 0.0);
 
     name = robot_name; //defined in RobotDriver super class.
-    std::cout << "Constructed object of kuka_iiwa_driver class with name: " << name << std::endl;
+    std::cout << "Constructed object of kuka_iiwa_driver_crospi class with name: " << name << std::endl;
 
     first_commanding_active = false;
 
 }
 
-bool kuka_iiwa_driver::initialize()
+bool kuka_iiwa_driver_crospi::initialize()
 {
 
     iiwa_connected = app.connect(fri_port, ip_address.c_str());
@@ -81,7 +81,7 @@ bool kuka_iiwa_driver::initialize()
     return true;
 }
 
-void kuka_iiwa_driver::update(volatile std::atomic<bool>& stopFlag)
+void kuka_iiwa_driver_crospi::update(volatile std::atomic<bool>& stopFlag)
 {
 
     client.getContinousState();
@@ -111,29 +111,29 @@ void kuka_iiwa_driver::update(volatile std::atomic<bool>& stopFlag)
     app.step();
 }
 
-void kuka_iiwa_driver::on_configure() {
+void kuka_iiwa_driver_crospi::on_configure() {
     // std::cout << "entering on configure =======================" << std::endl;
 
 }
 
-void kuka_iiwa_driver::on_activate() 
+void kuka_iiwa_driver_crospi::on_activate() 
 {
 
 
 }
 
-void kuka_iiwa_driver::on_deactivate() {
+void kuka_iiwa_driver_crospi::on_deactivate() {
     // std::cout << "entering on deactivate =======================" << std::endl;
 
 }
 
-void kuka_iiwa_driver::on_cleanup() {
+void kuka_iiwa_driver_crospi::on_cleanup() {
     // std::cout << "entering on cleanup =======================" << std::endl;
 
 }
 
 
-void kuka_iiwa_driver::finalize() {
+void kuka_iiwa_driver_crospi::finalize() {
     std::cout << "finalize() called =======================" << std::endl;
     app.disconnect();
 
@@ -141,7 +141,7 @@ void kuka_iiwa_driver::finalize() {
 
 
 
-kuka_iiwa_driver::~kuka_iiwa_driver() {
+kuka_iiwa_driver_crospi::~kuka_iiwa_driver_crospi() {
 
 };
 
@@ -151,4 +151,4 @@ kuka_iiwa_driver::~kuka_iiwa_driver() {
 
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(etasl::kuka_iiwa_driver, etasl::RobotDriver)
+PLUGINLIB_EXPORT_CLASS(etasl::kuka_iiwa_driver_crospi, etasl::RobotDriver)

@@ -13,9 +13,9 @@
 
 namespace etasl {
 
-class kuka_iiwa_driver : public RobotDriver {
+class kuka_iiwa_driver_crospi : public RobotDriver {
     public:
-        typedef std::shared_ptr<kuka_iiwa_driver> SharedPtr;
+        typedef std::shared_ptr<kuka_iiwa_driver_crospi> SharedPtr;
 
 
     private:
@@ -42,7 +42,7 @@ class kuka_iiwa_driver : public RobotDriver {
         robotdrivers::DynamicJointDataField joint_pos_struct;
 
     public:
-        kuka_iiwa_driver();
+        kuka_iiwa_driver_crospi();
 
         virtual void construct(std::string robot_name,
                     const Json::Value& config,
@@ -67,7 +67,7 @@ class kuka_iiwa_driver : public RobotDriver {
 
         // virtual const std::string& getName() const override;
 
-        virtual ~kuka_iiwa_driver();
+        virtual ~kuka_iiwa_driver_crospi();
 };
 
 } // namespace etasl

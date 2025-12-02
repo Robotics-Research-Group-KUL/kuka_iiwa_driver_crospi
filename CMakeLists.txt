@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(kuka_iiwa_driver)
+project(kuka_iiwa_driver_crospi)
 
-message("--------------kuka_iiwa_driver compiling ----------------")
+message("--------------kuka_iiwa_driver_crospi compiling ----------------")
 
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -14,7 +14,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(ament_index_cpp REQUIRED)
 
 find_package(pluginlib REQUIRED)
-find_package(etasl_ros2 REQUIRED)
+find_package(crospi_core REQUIRED)
 
 
 # -- start --Stuff for triple buffer implementation of boost 1.89
@@ -55,16 +55,16 @@ add_custom_target(
 
 include_directories(${FRISDK_INCLUDE})
 
-set(src_kuka_iiwa_driver
-    src/kuka_iiwa_driver.cpp
+set(src_kuka_iiwa_driver_crospi
+    src/kuka_iiwa_driver_crospi.cpp
     src/kukaiiwa_client.cpp
 )
 
-add_library(kuka_iiwa_driver 
+add_library(kuka_iiwa_driver_crospi 
             SHARED 
-            ${src_kuka_iiwa_driver})
+            ${src_kuka_iiwa_driver_crospi})
 
-add_dependencies(kuka_iiwa_driver kuka_fri_sdk) #Makes sure to compile first kuka_fri_sdk before the kuka_iiwa_driver
+add_dependencies(kuka_iiwa_driver_crospi kuka_fri_sdk) #Makes sure to compile first kuka_fri_sdk before the kuka_iiwa_driver_crospi
 
 message("-------------- KUKA FRI SDK compiled----------------")
 
@@ -75,7 +75,7 @@ find_library(FRI_CLIENT_LIB
 )
 
 set(rosdependencies
-"etasl_ros2"
+"crospi_core"
 "pluginlib"
 )
 
@@ -85,7 +85,7 @@ set(dependencies
     jsoncpp
     # etasl_misc_lib 
     # etasl_task_utils
-    # etasl_node_utils
+    # crospi_node_utils
     # etasl_interfacing_utils
     # robot_interfacing_utils
     # ${FRISDK_LIB}/libFRIClient.so
@@ -97,26 +97,26 @@ set(dependencies
 message("--------------FRI_CLIENT_LIB: ${FRI_CLIENT_LIB}----------------")
 
 
-pluginlib_export_plugin_description_file(etasl_ros2 plugins.xml)
+pluginlib_export_plugin_description_file(crospi_core plugins.xml)
 
 
-target_include_directories(kuka_iiwa_driver PUBLIC
+target_include_directories(kuka_iiwa_driver_crospi PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${Boost_INCLUDE_DIRS}
 )
 
-ament_target_dependencies(kuka_iiwa_driver ${rosdependencies})  
-target_link_libraries(kuka_iiwa_driver ${dependencies})
+ament_target_dependencies(kuka_iiwa_driver_crospi ${rosdependencies})  
+target_link_libraries(kuka_iiwa_driver_crospi ${dependencies})
 
-ament_export_dependencies(etasl_ros2)
+ament_export_dependencies(crospi_core)
 
 ament_export_libraries(
-  kuka_iiwa_driver
+  kuka_iiwa_driver_crospi
 )
 
 install(
-  TARGETS kuka_iiwa_driver
+  TARGETS kuka_iiwa_driver_crospi
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin

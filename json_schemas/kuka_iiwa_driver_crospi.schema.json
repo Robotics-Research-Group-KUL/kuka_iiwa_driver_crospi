@@ -1,18 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema",
-    "$id":"kuka_iiwa_driver.schema.json",
+    "$id":"kuka_iiwa_driver_crospi.schema.json",
     "type":"object",
     "properties":{
-        "is-kuka_iiwa_driver" : {
+        "is-kuka_iiwa_driver_crospi" : {
             "description":"To indicate that the task will be executed using a KUKA IIWA robot.",
             "type":"boolean",
             "const":true
         }
     },
-    "required":["is-kuka_iiwa_driver"],
+    "required":["is-kuka_iiwa_driver_crospi"],
     "additionalProperties": true,
     "dependencies":{
-        "is-kuka_iiwa_driver":{
+        "is-kuka_iiwa_driver_crospi":{
           "required":["ip_address", "fri_port", "robot_joints", "periodicity"],
           "properties":{
                 "ip_address" : {
