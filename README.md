@@ -4,11 +4,22 @@ This package contains a driver for controlling the Kuka iiwa using crospi_core, 
 
 ## Installation
 
-Replace the *external/kuka_fri_sdk* with your own KUKA FRI SDK. We cannot distribute this SDK since it has a closed license and need to be distributed by KUKA. 
+This driver requires the KUKA FRI (Fast Robot Interface) C++ SDK. We cannot distribute this SDK since it has a closed license and needs to be distributed by KUKA.
 
-Then compile the SDK using cmake/make as instructed by KUKA.
+1. Place the KUKA FRI SDK in *external/kuka_fri_sdk*, such that *external/kuka_fri_sdk/include/friClientApplication.h* and *external/kuka_fri_sdk/build/GNUMake/Makefile* exist:
+   ```bash
+   cd <your_ws>/src/kuka_iiwa_driver_crospi
+   cp -r <path_to_your_kuka_fri_sdk>/. external/kuka_fri_sdk/
+   ```
+   *external/kuka_fri_sdk* is a git submodule pointing to a private KU Leuven repository; if you have access to it, use `git submodule update --init` instead.
+   Alternatively, keep the SDK somewhere else and pass its location to CMake: `colcon build --cmake-args -DKUKA_FRI_SDK_DIR=<path_to_sdk>`.
 
-Then compile the package using *colcon*.
+2. Compile the package using *colcon*:
+   ```bash
+   cd <your_ws>
+   colcon build --packages-up-to kuka_iiwa_driver_crospi
+   ```
+   The SDK library (*libFRIClient.so*) is built automatically with the SDK's own GNUMake build (no manual `make` needed; the result is kept in *external/kuka_fri_sdk/lib*) and installed together with the driver.
 
 ## Documentation
 
